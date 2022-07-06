@@ -66,7 +66,6 @@ function carrito(){
     while(x != "S"){
         c = cantidad();
         carrito += (parseFloat(productos[x-1].precio) / parseFloat(productos[x-1].peso)) * parseFloat(c);
-        console.log("Su subtotal es de: $", carrito);
         console.clear();
         list(productos);
         console.log("Su subtotal es de: $", carrito);
@@ -87,14 +86,8 @@ function option(){
     return x;
 }
 
-function optionI(){
-    let x;
-    x = prompt('Es usted un cliente? (C = cliente, D = Desarrollador)');
-    return x;
-}
-
 function checkOption(x){
-    while(x != "S" && (parseInt(x) > produtos.length || parseInt(x) < 1)){
+    while(x != "S" && (parseInt(x) > productos.length || parseInt(x) < 1)){
         alert('Valor incorrecto');
         x = option();
     }
@@ -147,15 +140,60 @@ function list(x){
     )
 }
 
+let productList = document.getElementById("productList");
 
-
-let x = optionI();
-while(x != "C" && x != "D"){
-    alert('Valor incorrecto');
-    x = optionI();
+//Listando productos en HTML diferenciando estilos por marca
+for(const product of productos){
+    if(product.marca == "La Paulina"){
+        let productBlock = document.createElement("div")
+        productBlock.className = "productBlock LaPaulina"
+        productBlock.innerHTML = `
+        <h3>${product.marca}</h3>
+        <h4>${product.tipo}</h4>
+        <p>Precio (100gr): $${product.precio}</p>
+        `
+        productList.append(productBlock)
+    } else if(product.marca == "Paladini"){
+        let productBlock = document.createElement("div")
+        productBlock.className = "productBlock Paladini"
+        productBlock.innerHTML = `
+        <h3>${product.marca}</h3>
+        <h4>${product.tipo}</h4>
+        <p>Precio (100gr): $${product.precio}</p>
+        `
+        productList.append(productBlock)
+    } else{
+        let productBlock = document.createElement("div")
+        productBlock.className = "productBlock"
+        productBlock.innerHTML = `
+        <h3>${product.marca}</h3>
+        <h4>${product.tipo}</h4>
+        <p>Precio (100gr): $${product.precio}</p>
+        `
+        productList.append(productBlock)
+    }
+    
 }
-if(x == "C"){
-    carrito();
-} else{
+
+function optionsDesarrolladorCliente(){
+    let x = optionI();
+    while(x != "C" && x != "D"){
+        alert('Valor incorrecto');
+        x = optionI();
+    }
+    if(x == "C"){
+        carrito();
+    } else{
+        developerUser();
+    }
+}
+
+let btnDesarrollador = document.getElementById("btnDesarrollador");
+btnDesarrollador.onclick = () => {
     developerUser();
-}
+};
+
+let btnCliente = document.getElementById("btnCliente");
+btnCliente.onclick = () => {
+    carrito();
+};

@@ -1,0 +1,26 @@
+#productList{
+    background-color: aquamarine;
+    padding: 2px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    width: 98vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.productBlock{
+    width: fit-content;
+    min-width: 22vw;
+    background-color: aliceblue;
+    padding: 4px;
+    border: 4px;
+    border-color: blue;
+    border-radius: 4px;
+    margin: 10px;
+}
+
+.LaPaulina{
+    background-color: rgba(0, 255, 255, 0.301);
+}
+.Paladini{
+    background-color: rgba(255, 0, 0, 0.301);
+}
