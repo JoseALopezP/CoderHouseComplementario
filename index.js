@@ -113,19 +113,32 @@ function developerUser(){
             let p = prompt("Cual sera el nuevo precio?")
             productos[x-1].cambiarPrecio(parseFloat(p));
             console.clear();
+            let productBlocks = document.querySelectorAll('.productBlock');
+            for(const product of productBlocks){
+                product.remove();
+            }
             list(productos);
+            listingProducts()
         }else if(id === "B"){
-            let listx = productos;
-            listx.sort((a, b) => {
+            productos.sort((a, b) => {
                 return b.precio - a.precio;
             });
-            list(listx);
+            let productBlocks = document.querySelectorAll('.productBlock');
+            for(const product of productBlocks){
+                product.remove();
+            }
+            list(productos);
+            listingProducts()
         }else if(id === "C"){
-            let listx = productos;
-            listx.sort((a, b) => {
+            productos.sort((a, b) => {
                 return a.precio - b.precio;
             });
-            list(listx);
+            let productBlocks = document.querySelectorAll('.productBlock');
+            for(const product of productBlocks){
+                product.remove();
+            }
+            list(productos);
+            listingProducts()
         }
         id = optionDeveloper();
     }
@@ -143,50 +156,41 @@ function list(x){
 let productList = document.getElementById("productList");
 
 //Listando productos en HTML diferenciando estilos por marca
-for(const product of productos){
-    if(product.marca == "La Paulina"){
-        let productBlock = document.createElement("div")
-        productBlock.className = "productBlock LaPaulina"
-        productBlock.innerHTML = `
-        <h3>${product.marca}</h3>
-        <h4>${product.tipo}</h4>
-        <p>Precio (100gr): $${product.precio}</p>
-        `
-        productList.append(productBlock)
-    } else if(product.marca == "Paladini"){
-        let productBlock = document.createElement("div")
-        productBlock.className = "productBlock Paladini"
-        productBlock.innerHTML = `
-        <h3>${product.marca}</h3>
-        <h4>${product.tipo}</h4>
-        <p>Precio (100gr): $${product.precio}</p>
-        `
-        productList.append(productBlock)
-    } else{
-        let productBlock = document.createElement("div")
-        productBlock.className = "productBlock"
-        productBlock.innerHTML = `
-        <h3>${product.marca}</h3>
-        <h4>${product.tipo}</h4>
-        <p>Precio (100gr): $${product.precio}</p>
-        `
-        productList.append(productBlock)
+function listingProducts(){
+    for(const product of productos){
+        if(product.marca == "La Paulina"){
+            let productBlock = document.createElement("div")
+            productBlock.className = "productBlock LaPaulina"
+            productBlock.innerHTML = `
+            <h3>${product.marca}</h3>
+            <h4>${product.tipo}</h4>
+            <p>Precio (100gr): $${product.precio}</p>
+            `
+            productList.append(productBlock)
+        } else if(product.marca == "Paladini"){
+            let productBlock = document.createElement("div")
+            productBlock.className = "productBlock Paladini"
+            productBlock.innerHTML = `
+            <h3>${product.marca}</h3>
+            <h4>${product.tipo}</h4>
+            <p>Precio (100gr): $${product.precio}</p>
+            `
+            productList.append(productBlock)
+        } else{
+            let productBlock = document.createElement("div")
+            productBlock.className = "productBlock"
+            productBlock.innerHTML = `
+            <h3>${product.marca}</h3>
+            <h4>${product.tipo}</h4>
+            <p>Precio (100gr): $${product.precio}</p>
+            `
+            productList.append(productBlock)
+        }
+        
     }
     
 }
-
-function optionsDesarrolladorCliente(){
-    let x = optionI();
-    while(x != "C" && x != "D"){
-        alert('Valor incorrecto');
-        x = optionI();
-    }
-    if(x == "C"){
-        carrito();
-    } else{
-        developerUser();
-    }
-}
+listingProducts()
 
 let btnDesarrollador = document.getElementById("btnDesarrollador");
 btnDesarrollador.onclick = () => {
