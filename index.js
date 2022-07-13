@@ -164,7 +164,7 @@ function listingProducts(){
             productBlock.innerHTML = `
             <h3>${product.marca}</h3>
             <h4>${product.tipo}</h4>
-            <p>Precio (100gr): $${product.precio}</p>
+            <p>Precio (${product.peso}gr): $${product.precio}</p>
             `
             productList.append(productBlock)
         } else if(product.marca == "Paladini"){
@@ -173,7 +173,7 @@ function listingProducts(){
             productBlock.innerHTML = `
             <h3>${product.marca}</h3>
             <h4>${product.tipo}</h4>
-            <p>Precio (100gr): $${product.precio}</p>
+            <p>Precio (${product.peso}gr): $${product.precio}</p>
             `
             productList.append(productBlock)
         } else{
@@ -182,7 +182,7 @@ function listingProducts(){
             productBlock.innerHTML = `
             <h3>${product.marca}</h3>
             <h4>${product.tipo}</h4>
-            <p>Precio (100gr): $${product.precio}</p>
+            <p>Precio (${product.peso}gr): $${product.precio}</p>
             `
             productList.append(productBlock)
         }
@@ -191,6 +191,35 @@ function listingProducts(){
     
 }
 listingProducts()
+
+//Formulario para listar nuevos productos
+let formularioProductos = document.getElementById("formularioProductos");
+let inputMarca = document.getElementById("marcaProducto");
+let inputTipo = document.getElementById("tipoProducto");
+let inputUnidad = document.getElementById("unidadProducto");
+let inputPrecio = document.getElementById("precioProducto");
+formularioProductos.onsubmit = (event) => addProducto(event);
+
+//codigo,tipo,marca,peso,precio
+function addProducto(event){
+    event.preventDefault();
+    let codigoF = productos.length + 1;
+    let tipoF = inputTipo.value;
+    let marcaF = inputMarca.value;
+    let pesoF = parseInt(inputUnidad.value);
+    let precioF = parseFloat(inputPrecio.value);
+
+    newProducto = new Producto(codigoF, marcaF, tipoF, pesoF, precioF);
+    productos.push(newProducto);
+    formularioProductos.reset();
+    //Actualización de la lista de productos
+    let productBlocks = document.querySelectorAll('.productBlock');
+        for(const product of productBlocks){
+            product.remove();
+        }
+        list(productos);
+        listingProducts()
+};
 
 let btnDesarrollador = document.getElementById("btnDesarrollador");
 btnDesarrollador.onclick = () => {
