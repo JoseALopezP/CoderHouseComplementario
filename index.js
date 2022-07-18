@@ -165,12 +165,9 @@ function cleanListedProducts(){
 //Listando productos en HTML diferenciando estilos por marca
 function listingProducts(){
     for(const product of productos){
-        if(product.marca == "La Paulina"){
-            let productBlock = document.createElement("div")
-            productBlock.className = "productBlock LaPaulina"
-            productBlock.innerHTML = `
+        let htmlCode = `
             <div class="productBlockImg">
-                <img src="media/img/${product.tipo}.png" alt="${product.tipo}">
+                <img src="media/img/${product.tipo}.jpg" alt="${product.tipo}">
             </div>
             <div class="productBlockDescription">
                 <h3>${product.marca}</h3>
@@ -179,42 +176,39 @@ function listingProducts(){
             </div>
             <div class="productBlockButtons">
                 <p>Cambiar Precio</p>
-                <form id="changePrice">
-                    <input type="number" placeholder="Ingresa el nuevo precio" id="priceChangePrice">
+                <form class="changePrice" id="changePrice${product.codigo}">
+                    <input type="number" step="0.01" placeholder="Ingresa el nuevo precio" id="priceChangePrice${product.codigo}">
                     <input type="hidden" value="${product.codigo}">
                     <button type="submit">CAMBIAR</button>
                 </form>
                 <p>Agregar al Carrito</p>
-                <form id="addCart">
-                    <input type="number" placeholder="Ingresa la cantidad (gramos)" id="cantidadAddCart">
+                <form class="addCart" id="addCart${product.codigo}">
+                    <input type="number" step="0.01" placeholder="Ingresa la cantidad (gramos)" id="cantidadAddCart${product.codigo}">
                     <button type="submit">AGREGAR</button>
                 </form>
             </div>
-            `
-            productList.append(productBlock)
+        `
+        if(product.marca == "La Paulina"){
+            let productBlock = document.createElement("div");
+            productBlock.className = "productBlock LaPaulina";
+            productBlock.innerHTML = htmlCode;
+            productList.append(productBlock);
         } else if(product.marca == "Paladini"){
-            let productBlock = document.createElement("div")
-            productBlock.className = "productBlock Paladini"
-            productBlock.innerHTML = `
-            <h3>${product.marca}</h3>
-            <h4>${product.tipo}</h4>
-            <p>Precio (${product.peso}gr): $${product.precio}</p>
-            `
-            productList.append(productBlock)
+            let productBlock = document.createElement("div");
+            productBlock.className = "productBlock Paladini";
+            productBlock.innerHTML = htmlCode;
+            productList.append(productBlock);
         } else{
-            let productBlock = document.createElement("div")
-            productBlock.className = "productBlock"
-            productBlock.innerHTML = `
-            <h3>${product.marca}</h3>
-            <h4>${product.tipo}</h4>
-            <p>Precio (${product.peso}gr): $${product.precio}</p>
-            `
-            productList.append(productBlock)
+            let productBlock = document.createElement("div");
+            productBlock.className = "productBlock";
+            productBlock.innerHTML = htmlCode;
+            productList.append(productBlock);
         }
         
     }
     
 }
+
 listingProducts()
 
 //Formulario para listar nuevos productos
