@@ -155,6 +155,13 @@ function list(x){
 
 let productList = document.getElementById("productList");
 
+//Limpiar productos listados en HTML
+function cleanListedProducts(){
+    let productBlocks = document.querySelectorAll('.productBlock');
+    for(const product of productBlocks){
+        product.remove();
+    }
+}
 //Listando productos en HTML diferenciando estilos por marca
 function listingProducts(){
     for(const product of productos){
@@ -162,9 +169,27 @@ function listingProducts(){
             let productBlock = document.createElement("div")
             productBlock.className = "productBlock LaPaulina"
             productBlock.innerHTML = `
-            <h3>${product.marca}</h3>
-            <h4>${product.tipo}</h4>
-            <p>Precio (${product.peso}gr): $${product.precio}</p>
+            <div class="productBlockImg">
+                <img src="media/img/${product.tipo}.png" alt="${product.tipo}">
+            </div>
+            <div class="productBlockDescription">
+                <h3>${product.marca}</h3>
+                <h4>${product.tipo}</h4>
+                <p>Precio (${product.peso}gr): $${product.precio}</p>
+            </div>
+            <div class="productBlockButtons">
+                <p>Cambiar Precio</p>
+                <form id="changePrice">
+                    <input type="number" placeholder="Ingresa el nuevo precio" id="priceChangePrice">
+                    <input type="hidden" value="${product.codigo}">
+                    <button type="submit">CAMBIAR</button>
+                </form>
+                <p>Agregar al Carrito</p>
+                <form id="addCart">
+                    <input type="number" placeholder="Ingresa la cantidad (gramos)" id="cantidadAddCart">
+                    <button type="submit">AGREGAR</button>
+                </form>
+            </div>
             `
             productList.append(productBlock)
         } else if(product.marca == "Paladini"){
