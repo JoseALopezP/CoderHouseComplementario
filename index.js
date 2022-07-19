@@ -1,4 +1,4 @@
-//funcion constructora
+//funcion constructora listado de productos
 function Producto(codigo, marca, tipo, peso, precio){
     this.codigo = codigo;
     this.marca = marca;
@@ -8,18 +8,22 @@ function Producto(codigo, marca, tipo, peso, precio){
     this.describir = () => (console.log(this.codigo + " - " + this.marca +" "+ this.tipo +" ("+ this.peso +"gr) ---> $"+ this.precio));
     this.cambiarPrecio = (nuevoPrecio) => (this.precio = nuevoPrecio);
 }
+//funcion constructora carrito
+function cartProducto(codigo, cantidad){
+    this.codigo = codigo;
+    this.cantidad = cantidad;
+}
 
 //Declaracion del array de productos
 let productos = [];
-//Seteo de productos
-obtenerProductosLocalStorage()
+//Declaracion del array del carrito y total
+let carritoProductos = [];
+let cartTotal;
 
 //Seteo inicial de productos (nada si ya hay productos, los basicos si aun no se ha agregado ninguno)
 function obtenerProductosLocalStorage() {
     let productosAlmacenados = localStorage.getItem("productosLocal");
     if (productosAlmacenados != '') {
-        console.log(typeof productosAlmacenados);
-        console.log(productosAlmacenados);
         productos = JSON.parse(productosAlmacenados);
     } else{
         let newProducto = new Producto(1, "La Paulina", "Queso Cremoso tradicional", 100, 86.3);
@@ -43,6 +47,13 @@ function obtenerProductosLocalStorage() {
         newProducto = new Producto(10, "Paladini", "Queso Danbo", 100, 108.7);
         productos.push(newProducto);
         localStorage.setItem("productosLocal", JSON.stringify(productos));
+    }
+}
+//Seteo carrito con session storage data
+function obtenerCarritoSessionStorage(){
+    let carritoActual = sessionStorage.getItem('carritoProductoSession');
+    if(carritoActual != ''){
+        carritoProductos = JSON.parse(carritoActual);
     }
 }
 
@@ -142,15 +153,9 @@ function developerUser(){
 }
 
 
-function list(x){
-    x.forEach(
-        function callback(v , i){
-            x[i].describir();
-        }
-    )
-}
-
 let productList = document.getElementById("productList");
+let listedCartBody = document.getElementById("listedCartBody");
+let cartFooter = document.getElementById("cartfooter");
 
 //Limpiar productos listados en HTML
 function cleanListedProducts(){
@@ -192,6 +197,49 @@ function listingProducts(){
     }
     
 }
+//Actualizar productos en HTML
+function updateProducts(){
+    cleanListedProducts();
+    listingProducts();
+}
+
+//Limpiar productos en Carrito
+function cleanListedCartProducts(){
+    let productCartBlocks = document.querySelectorAll('.productCartBlock');
+    for(const product of productCartBlocks){
+        product.remove();
+    }
+    let totalCart = document.querySelectorAll('.cartTotal');
+    totalCart.remove();
+}
+//Formar carrito
+function listingCartProducts(){
+    for(const product of carritoProductos){
+        htmlCode=`
+            <p class="cartItemDescription">${productos[product.codigo].marca} ${productos[product.codigo].tipo}</p>
+            <p class="cartItemPrice">$${productos[product.codigo].precio}(${productos[product.codigo].peso}gr)</p>
+            <p class="cartItemQuantity">${product.cantidad}</p>
+            <p class="cartItemTotal">$${product.cantidad*(productos[product.codigo].precio)/productos[product.codigo].peso}</p>
+        `
+        let productBlock = document.createElement("div");
+        productBlock.className = "productCartBlock";
+        productBlock.innerHTML = htmlCode;
+        productList.append(productBlock);
+    }
+    let totalCart = document.createElement("div")
+    totalCartBlock.className = "productCartTotalBlock";
+    totalCartBlock.innerHTML = `
+        <h4>TOTAL:</h4>
+        <p>$${cartTotal}</p>
+    `;
+    productList.append(totalCartBlock);
+}
+//Actualizar carrito HTML
+function updateCartProducts(){
+    cleanListedCartProducts();
+    listingCartProducts();
+}
+
 
 //Formulario para listar nuevos productos
 let formularioProductos = document.getElementById("formularioProductos");
@@ -213,14 +261,28 @@ function addProducto(event){
     newProducto = new Producto(codigoF, marcaF, tipoF, pesoF, precioF);
     productos.push(newProducto);
     formularioProductos.reset();
-    //Actualización de la lista de productos
-    let productBlocks = document.querySelectorAll('.productBlock');
-        for(const product of productBlocks){
-            product.remove();
-        }
-        list(productos);
-        listingProducts()
+    localStorage.setItem("productosLocal", JSON.stringify(productos))
+    updateProducts();
+    
 };
+
+//Formulario para agregar productos al carrito
+let formularioAgregarCarro = document.getElementById('addCartForm');
+let inputOpcionAgregarCarro = document.getElementById('addCartOptions');
+let inputCantidadAgregarCarro = document.getElementById('addCartWeight');
+
+formularioAgregarCarro.onsubmit = (event) => addToCart(event);
+
+function addToCart(event){
+    event.preventDefault();
+    let codigoC = parseInt(inputOpcionAgregarCarro.value)-1;
+    let cantidadC = parseInt(inputCantidadAgregarCarro.value);
+    newCartProducto = new cartProducto(codigoC, cantidadC);
+    carritoProductos.push(newCartProducto);
+    sessionStorage.setItem("carritoProductosLocal", JSON.stringify(carritoProductos));
+    updateCarrito();
+
+}
 
 let btnDesarrollador = document.getElementById("btnDesarrollador");
 btnDesarrollador.onclick = () => {
@@ -234,25 +296,6 @@ btnCliente.onclick = () => {
 
 //Listado de opciones para funciones
 function listingOptions(){
-    /*
-    for(const product of productos){
-        option.innerHTML= `
-            <option value="${product.codigo}">${product.marca} ${product.tipo}</option>
-        `;
-        ${place}.append(option);
-    }
-    for(const product of productos){
-        option.innerHTML= `
-            <option value="${product.codigo}">${product.marca} ${product.tipo}</option>
-        `;
-        ${place}.append(option);
-    }
-    for(const product of productos){
-        option.innerHTML= `
-            <option value="${product.codigo}">${product.marca} ${product.tipo}</option>
-        `;
-        ${place}.append(option);
-    }*/
     for(const product of productos){
         let option = document.createElement("option");
         option.value = `${product.codigo}`;
@@ -279,13 +322,6 @@ function listingOptions(){
     }
     
 }
-
-/*let productBlock = document.createElement("div");
-            productBlock.className = "productBlock Paladini";
-            productBlock.innerHTML = htmlCode;
-            productList.append(productBlock);*/
-
-//Listado Individual
 
 function main(){
     obtenerProductosLocalStorage();
