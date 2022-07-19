@@ -55,6 +55,10 @@ function obtenerCarritoSessionStorage(){
     if(carritoActual != ''){
         carritoProductos = JSON.parse(carritoActual);
     }
+    let totalCartActual = sessionStorage.getItem('cartTotalSession');
+    if(totalCartActual != ''){
+        cartTotal = JSON.parse(totalCartActual);
+    }
 }
 
 //funcion constructora para array con opciones de desarrollador
@@ -280,7 +284,8 @@ function addToCart(event){
     newCartProducto = new cartProducto(codigoC, cantidadC);
     carritoProductos.push(newCartProducto);
     sessionStorage.setItem("carritoProductosLocal", JSON.stringify(carritoProductos));
-    updateCarrito();
+    cartTotal += cantidadC*(productos[codigoC].precio/productos[codigoC].cantidad);
+    updateCartProducts();
 
 }
 
