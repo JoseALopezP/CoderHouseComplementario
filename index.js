@@ -55,9 +55,9 @@ function obtenerCarritoSessionStorage(){
     if(carritoActual != ''){
         carritoProductos = JSON.parse(carritoActual);
     }
-    let totalCartActual = sessionStorage.getItem('cartTotalSession');
-    if(totalCartActual != ''){
-        cartTotal = JSON.parse(totalCartActual);
+    let carritoTotalActual = sessionStorage.getItem('carritoTotalSession');
+    if(carritoTotalActual != null){
+        cartTotal = JSON.parse(carritoTotalActual);
     }
 }
 
@@ -159,7 +159,7 @@ function developerUser(){
 
 let productList = document.getElementById("productList");
 let listedCartBody = document.getElementById("listedCartBody");
-let cartFooter = document.getElementById("cartfooter");
+let cartFooter = document.getElementById("cartFooter");
 
 //Limpiar productos listados en HTML
 function cleanListedProducts(){
@@ -213,8 +213,10 @@ function cleanListedCartProducts(){
     for(const product of productCartBlocks){
         product.remove();
     }
-    let totalCart = document.querySelectorAll('.cartTotal');
-    totalCart.remove();
+    let totalCartBlock = document.querySelectorAll('.productCartTotalBlock');
+    for(const product of totalCartBlock){
+        product.remove();
+    }
 }
 //Formar carrito
 function listingCartProducts(){
@@ -228,15 +230,17 @@ function listingCartProducts(){
         let productBlock = document.createElement("div");
         productBlock.className = "productCartBlock";
         productBlock.innerHTML = htmlCode;
-        productList.append(productBlock);
+        listedCartBody.append(productBlock);
     }
-    let totalCart = document.createElement("div")
-    totalCartBlock.className = "productCartTotalBlock";
-    totalCartBlock.innerHTML = `
-        <h4>TOTAL:</h4>
-        <p>$${cartTotal}</p>
-    `;
-    productList.append(totalCartBlock);
+    if(cartTotal != ''){
+        let totalCartBlock = document.createElement("div")
+        totalCartBlock.className = "productCartTotalBlock";
+        totalCartBlock.innerHTML = `
+            <h4>TOTAL:</h4>
+            <p>$${cartTotal}</p>
+        `;
+        cartFooter.append(totalCartBlock);
+    }
 }
 //Actualizar carrito HTML
 function updateCartProducts(){
@@ -280,13 +284,21 @@ formularioAgregarCarro.onsubmit = (event) => addToCart(event);
 function addToCart(event){
     event.preventDefault();
     let codigoC = parseInt(inputOpcionAgregarCarro.value)-1;
-    let cantidadC = parseInt(inputCantidadAgregarCarro.value);
+    let cantidadC = inputCantidadAgregarCarro.value;
     newCartProducto = new cartProducto(codigoC, cantidadC);
     carritoProductos.push(newCartProducto);
-    sessionStorage.setItem("carritoProductosLocal", JSON.stringify(carritoProductos));
-    cartTotal += cantidadC*(productos[codigoC].precio/productos[codigoC].cantidad);
-    updateCartProducts();
+    sessionStorage.setItem("carritoProductosSession", JSON.stringify(carritoProductos));
+    let subtotal = parseFloat(cantidadC * (productos[codigoC].precio / productos[codigoC].peso));
+    cartTotal += subtotal;
+    console.log(productos[codigoC].precio);
+    console.log(productos[codigoC].peso);
+    console.log(cartTotal);
+    console.log(subtotal);
+    
 
+    sessionStorage.setItem("carritoTotalSession", cartTotal);
+    updateCartProducts();
+    formularioProductos.reset();
 }
 
 let btnDesarrollador = document.getElementById("btnDesarrollador");
@@ -330,8 +342,9 @@ function listingOptions(){
 
 function main(){
     obtenerProductosLocalStorage();
-    listingProducts();
+    updateProducts();
     listingOptions();
+    updateCartProducts();
 }
 
 main();
