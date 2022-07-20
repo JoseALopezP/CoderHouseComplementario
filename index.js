@@ -18,12 +18,12 @@ function cartProducto(codigo, cantidad){
 let productos = [];
 //Declaracion del array del carrito y total
 let carritoProductos = [];
-let cartTotal;
+let cartTotal = 0;
 
 //Seteo inicial de productos (nada si ya hay productos, los basicos si aun no se ha agregado ninguno)
 function obtenerProductosLocalStorage() {
     let productosAlmacenados = localStorage.getItem("productosLocal");
-    if (productosAlmacenados != '') {
+    if (productosAlmacenados != null) {
         productos = JSON.parse(productosAlmacenados);
     } else{
         let newProducto = new Producto(1, "La Paulina", "Queso Cremoso tradicional", 100, 86.3);
@@ -51,13 +51,11 @@ function obtenerProductosLocalStorage() {
 }
 //Seteo carrito con session storage data
 function obtenerCarritoSessionStorage(){
-    let carritoActual = sessionStorage.getItem('carritoProductoSession');
-    if(carritoActual != ''){
-        carritoProductos = JSON.parse(carritoActual);
-    }
+    let carritoActual = sessionStorage.getItem('carritoProductosSession');
     let carritoTotalActual = sessionStorage.getItem('carritoTotalSession');
-    if(carritoTotalActual != null){
-        cartTotal = JSON.parse(carritoTotalActual);
+    if(carritoActual != null){
+        carritoProductos = JSON.parse(carritoActual);
+        cartTotal = parseFloat(JSON.parse(carritoTotalActual));
     }
 }
 
@@ -67,95 +65,6 @@ function developerListOption(codigoD, descripcion){
     this.descripcion = descripcion;
     this.describir = () => (console.log(this.codigoD + ") " + this.descripcion));
 }
-
-//declaracion del array de opciones
-const developerList=[];
-
-//agregando opciones
-let newOption = new developerListOption("A", "Cambiar precio a un producto");
-developerList.push(newOption);
-newOption = new developerListOption("B", "Listar productos de mayor a menor precio");
-developerList.push(newOption);
-newOption = new developerListOption("C", "Listar productos de menor a mayor precio");
-developerList.push(newOption);
-
-
-//simulador interactivo
-function carrito(){
-    let carrito = 0;
-    let x;
-    let c;
-    list(productos);
-    x = option();
-    checkOption(x);
-    while(x != "S"){
-        c = cantidad();
-        carrito += (parseFloat(productos[x-1].precio) / parseFloat(productos[x-1].peso)) * parseFloat(c);
-        console.clear();
-        list(productos);
-        console.log("Su subtotal es de: $", carrito);
-        x = option();
-        checkOption(x);
-    }
-    console.log('Su total es de: $', carrito);
-}
-
-function cantidad(){
-    let c = prompt("¿Cuánto desea? (en gramos)");
-    return c;
-}
-
-function option(){
-    let x;
-    x = prompt('¿Qué desea agregar al carrito? (1 al ' + productos.length + ', S para salir)');
-    return x;
-}
-
-function checkOption(x){
-    while(x != "S" && (parseInt(x) > productos.length || parseInt(x) < 1)){
-        alert('Valor incorrecto');
-        x = option();
-    }
-    return x;
-}
-
-function optionDeveloper(){
-    let id;
-    list(developerList);
-    id = prompt('¿Qué desea realizar? (A al ' + developerList[developerList.length-1].codigoD + ', S para salir)');
-    console.clear();
-    return id;
-}
-
-function developerUser(){
-    let x;
-    let id;
-    id = optionDeveloper();
-    while(id != "S"){
-        if(id === "A"){
-            list(productos);
-            x = prompt("Seleccione el producto al que desea cambiar el precio");
-            let p = prompt("Cual sera el nuevo precio?")
-            productos[x-1].cambiarPrecio(parseFloat(p));
-            cleanListedProducts()
-            listingProducts()
-        }else if(id === "B"){
-            productos.sort((a, b) => {
-                return b.precio - a.precio;
-            });
-            cleanListedProducts()
-            listingProducts()
-        }else if(id === "C"){
-            productos.sort((a, b) => {
-                return a.precio - b.precio;
-            });
-            cleanListedProducts()
-            listingProducts()
-        }
-        id = optionDeveloper();
-    }
-}
-
 
 let productList = document.getElementById("productList");
 let listedCartBody = document.getElementById("listedCartBody");
@@ -181,18 +90,16 @@ function listingProducts(){
                 <p>Precio (${product.peso}gr): $${product.precio}</p>
             </div>
         `
+        let productBlock = document.createElement("div");
         if(product.marca == "La Paulina"){
-            let productBlock = document.createElement("div");
             productBlock.className = "productBlock LaPaulina";
             productBlock.innerHTML = htmlCode;
             productList.append(productBlock);
         } else if(product.marca == "Paladini"){
-            let productBlock = document.createElement("div");
             productBlock.className = "productBlock Paladini";
             productBlock.innerHTML = htmlCode;
             productList.append(productBlock);
         } else{
-            let productBlock = document.createElement("div");
             productBlock.className = "productBlock";
             productBlock.innerHTML = htmlCode;
             productList.append(productBlock);
@@ -220,19 +127,19 @@ function cleanListedCartProducts(){
 }
 //Formar carrito
 function listingCartProducts(){
-    for(const product of carritoProductos){
-        htmlCode=`
-            <p class="cartItemDescription">${productos[product.codigo].marca} ${productos[product.codigo].tipo}</p>
-            <p class="cartItemPrice">$${productos[product.codigo].precio}(${productos[product.codigo].peso}gr)</p>
-            <p class="cartItemQuantity">${product.cantidad}</p>
-            <p class="cartItemTotal">$${product.cantidad*(productos[product.codigo].precio)/productos[product.codigo].peso}</p>
-        `
-        let productBlock = document.createElement("div");
-        productBlock.className = "productCartBlock";
-        productBlock.innerHTML = htmlCode;
-        listedCartBody.append(productBlock);
-    }
-    if(cartTotal != ''){
+    if(carritoProductos != null){
+        for(const product of carritoProductos){
+            htmlCode=`
+                <p class="cartItemDescription">${productos[product.codigo].marca} ${productos[product.codigo].tipo}</p>
+                <p class="cartItemPrice">$${productos[product.codigo].precio}(${productos[product.codigo].peso}gr)</p>
+                <p class="cartItemQuantity">${product.cantidad}</p>
+                <p class="cartItemTotal">$${product.cantidad*(productos[product.codigo].precio)/productos[product.codigo].peso}</p>
+            `
+            let productBlock = document.createElement("div");
+            productBlock.className = "productCartBlock";
+            productBlock.innerHTML = htmlCode;
+            listedCartBody.append(productBlock);
+        }
         let totalCartBlock = document.createElement("div")
         totalCartBlock.className = "productCartTotalBlock";
         totalCartBlock.innerHTML = `
@@ -271,7 +178,7 @@ function addProducto(event){
     formularioProductos.reset();
     localStorage.setItem("productosLocal", JSON.stringify(productos))
     updateProducts();
-    
+    updateListingOptions()
 };
 
 //Formulario para agregar productos al carrito
@@ -285,7 +192,7 @@ function addToCart(event){
     event.preventDefault();
     let codigoC = parseInt(inputOpcionAgregarCarro.value)-1;
     let cantidadC = inputCantidadAgregarCarro.value;
-    newCartProducto = new cartProducto(codigoC, cantidadC);
+    let newCartProducto = new cartProducto(codigoC, cantidadC);
     carritoProductos.push(newCartProducto);
     sessionStorage.setItem("carritoProductosSession", JSON.stringify(carritoProductos));
     let subtotal = parseFloat(cantidadC * (productos[codigoC].precio / productos[codigoC].peso));
@@ -294,7 +201,6 @@ function addToCart(event){
     console.log(productos[codigoC].peso);
     console.log(cartTotal);
     console.log(subtotal);
-    
 
     sessionStorage.setItem("carritoTotalSession", cartTotal);
     updateCartProducts();
@@ -311,40 +217,47 @@ btnCliente.onclick = () => {
     carrito();
 };
 
-//Listado de opciones para funciones
+//Eliminar Listado de opciones para funciones
+function deleteListedOptions(){
+    let productCartBlocks = document.querySelectorAll('.lOption');
+    for(const product of productCartBlocks){
+        product.remove();
+    }
+}
+
+//Listar productos para opciones
 function listingOptions(){
+    listingiteration(deleteOptions);
+    listingiteration(changePriceOptions);
+    listingiteration(addCartOptions);
+}
+//Iteracions para listar productos
+function listingiteration(place){
     for(const product of productos){
         let option = document.createElement("option");
+        option.className = "lOption"
         option.value = `${product.codigo}`;
         option.innerHTML= `
             <option value="${product.codigo}">${product.marca} ${product.tipo}</option>
         `;
-        deleteOptions.append(option);
+        place.append(option);
     }
-    for(const product of productos){
-        let option = document.createElement("option");
-        option.value = `${product.codigo}`;
-        option.innerHTML= `
-            <option value="${product.codigo}">${product.marca} ${product.tipo}</option>
-        `;
-        changePriceOptions.append(option);
-    }
-    for(const product of productos){
-        let option = document.createElement("option");
-        option.value = `${product.codigo}`;
-        option.innerHTML= `
-            <option value="${product.codigo}">${product.marca} ${product.tipo}</option>
-        `;
-        addCartOptions.append(option);
-    }
-    
+}
+//Listado de opciones para funciones
+
+
+//Actualizar el listado de opciones
+function updateListingOptions(){
+    deleteListedOptions();
+    listingOptions();
 }
 
 function main(){
     obtenerProductosLocalStorage();
+    obtenerCarritoSessionStorage()
     updateProducts();
-    listingOptions();
-    updateCartProducts();
+    updateCartProducts()
+    updateListingOptions();
 }
 
 main();
