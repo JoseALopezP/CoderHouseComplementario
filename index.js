@@ -9,7 +9,7 @@ function Producto(codigo, marca, tipo, peso, precio){
     this.cambiarPrecio = (nuevoPrecio) => (this.precio = nuevoPrecio);
 }
 //funcion constructora carrito
-function cartProducto(codigo, cantidad){
+function CartProducto(codigo, cantidad){
     this.codigo = codigo;
     this.cantidad = cantidad;
 }
@@ -129,11 +129,12 @@ function cleanListedCartProducts(){
 function listingCartProducts(){
     if(carritoProductos != null){
         for(const product of carritoProductos){
+            let code = findPosition(product.codigo);
             htmlCode=`
-                <p class="cartItemDescription">${productos[product.codigo].marca} ${productos[product.codigo].tipo}</p>
-                <p class="cartItemPrice">$${productos[product.codigo].precio}(${productos[product.codigo].peso}gr)</p>
+                <p class="cartItemDescription">${productos[code].marca} ${productos[code].tipo}</p>
+                <p class="cartItemPrice">$${productos[code].precio}(${productos[code].peso}gr)</p>
                 <p class="cartItemQuantity">${product.cantidad}</p>
-                <p class="cartItemTotal">$${product.cantidad*(productos[product.codigo].precio)/productos[product.codigo].peso}</p>
+                <p class="cartItemTotal">$${product.cantidad*(productos[code].precio)/productos[code].peso}</p>
             `
             let productBlock = document.createElement("div");
             productBlock.className = "productCartBlock";
@@ -151,6 +152,7 @@ function listingCartProducts(){
 }
 //Actualizar carrito HTML
 function updateCartProducts(){
+    updateCartTotal();
     cleanListedCartProducts();
     listingCartProducts();
 }
@@ -173,13 +175,25 @@ function addProducto(event){
     let pesoF = parseInt(inputUnidad.value);
     let precioF = parseFloat(inputPrecio.value);
 
-    newProducto = new Producto(codigoF, marcaF, tipoF, pesoF, precioF);
+    let newProducto = new Producto(codigoF, marcaF, tipoF, pesoF, precioF);
     productos.push(newProducto);
     formularioProductos.reset();
-    localStorage.setItem("productosLocal", JSON.stringify(productos))
+    localStorage.setItem("productosLocal", JSON.stringify(productos));
     updateProducts();
     updateListingOptions()
 };
+
+
+//Funcion para encontrar posicion del producto en array
+function findPosition(code){
+    let i;
+    for(i=0; i < productos.length; i++){
+        if(productos[i].codigo == code){
+            break;
+        }
+    }
+    return(parseInt(i-1));
+}
 
 //Formulario para agregar productos al carrito
 let formularioAgregarCarro = document.getElementById('addCartForm');
@@ -190,32 +204,67 @@ formularioAgregarCarro.onsubmit = (event) => addToCart(event);
 
 function addToCart(event){
     event.preventDefault();
-    let codigoC = parseInt(inputOpcionAgregarCarro.value)-1;
+    let codigoC = findPosition(inputOpcionAgregarCarro.value);
     let cantidadC = inputCantidadAgregarCarro.value;
-    let newCartProducto = new cartProducto(codigoC, cantidadC);
+    let newCartProducto = new CartProducto(codigoC, cantidadC);
     carritoProductos.push(newCartProducto);
     sessionStorage.setItem("carritoProductosSession", JSON.stringify(carritoProductos));
     let subtotal = parseFloat(cantidadC * (productos[codigoC].precio / productos[codigoC].peso));
-    cartTotal += subtotal;
-    console.log(productos[codigoC].precio);
-    console.log(productos[codigoC].peso);
-    console.log(cartTotal);
-    console.log(subtotal);
+    cartTotal += subtotal.toFixed(2);
 
     sessionStorage.setItem("carritoTotalSession", cartTotal);
     updateCartProducts();
     formularioProductos.reset();
 }
 
-let btnDesarrollador = document.getElementById("btnDesarrollador");
-btnDesarrollador.onclick = () => {
-    developerUser();
-};
+//formulario para cambiar precio
+let formularioCambiarPrecio = document.getElementById('changePriceForm');
+let inputOpcionCambiarPrecio = document.getElementById('changePriceOptions');
+let inputCambiarPrecio = document.getElementById('changePriceNewPrice');
 
-let btnCliente = document.getElementById("btnCliente");
-btnCliente.onclick = () => {
-    carrito();
-};
+formularioCambiarPrecio.onsubmit = (event) => changePrice(event);
+
+function changePrice(event){
+    event.preventDefault();
+    let codigoC = findPosition(inputOpcionCambiarPrecio.value);
+    let precioC = inputCambiarPrecio.value;
+    productos[codigoC].precio = precioC;
+
+    localStorage.setItem("productosLocal", JSON.stringify(productos));
+    updateProducts();
+    updateCartProducts();
+    formularioCambiarPrecio.reset();
+}
+function updateCartTotal(){
+    let newTotal = 0;
+    for(const product of carritoProductos){
+        let code = findPosition(product.codigo);
+        console.log(code);
+        console.log(typeof(code));
+        newTotal += (product.cantidad * (productos[code].precio / productos[code].peso));
+    }
+    cartTotal = newTotal;
+    sessionStorage.setItem("carritoTotalSession", cartTotal);
+}
+
+//Formulario para eliminar productos listados
+let formularioEliminar = document.getElementById('deleteForm');
+let inputOpcionEliminar = document.getElementById('deleteOptions');
+
+formularioEliminar.onsubmit = (event) => deleteProduct(event);
+
+function deleteProduct(event){
+    event.preventDefault();
+    codigoD = findPosition(inputOpcionEliminar.value+1);
+    productos.splice(codigoD, 1);
+
+    localStorage.setItem("productosLocal", JSON.stringify(productos));
+    updateProducts();
+    updateListingOptions();
+    updateCartProducts();
+    formularioCambiarPrecio.reset();
+}
+
 
 //Eliminar Listado de opciones para funciones
 function deleteListedOptions(){
@@ -224,7 +273,6 @@ function deleteListedOptions(){
         product.remove();
     }
 }
-
 //Listar productos para opciones
 function listingOptions(){
     listingiteration(deleteOptions);
@@ -243,8 +291,6 @@ function listingiteration(place){
         place.append(option);
     }
 }
-//Listado de opciones para funciones
-
 
 //Actualizar el listado de opciones
 function updateListingOptions(){
