@@ -24,3 +24,11 @@
 .Paladini{
     background-color: rgba(255, 0, 0, 0.301);
 }
+
+.productBlockImg{
+    max-width: 200px;
+}
+
+.productBlockImg img{
+    max-width: 200px;
+}

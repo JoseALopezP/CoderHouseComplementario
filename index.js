@@ -114,6 +114,28 @@ function updateProducts(){
     listingProducts();
 }
 
+//Encontrar Posicion carrito
+function findPositionC(codeFunc){
+    let codeF = codeFunc;
+    let i=0;
+    while(i < carritoProductos.length){
+        if(parseInt(productos[i].codigo) == codeF){
+            return(i);
+        }
+        i++;
+    }
+}
+//Limpiar productos Carrito eliminados
+function updateDeletedCart(){
+    for(let i=0; i < carritoProductos.length ; i++){
+        code = findPositionC(carritoProductos[i].codigo);
+        if(code == false){
+            console.log(carritoProductos);
+            carritoProductos.splice(code, 1);
+            console.log(carritoProductos);
+        }
+    }
+}
 //Limpiar productos en Carrito
 function cleanListedCartProducts(){
     let productCartBlocks = document.querySelectorAll('.productCartBlock');
@@ -152,6 +174,7 @@ function listingCartProducts(){
 }
 //Actualizar carrito HTML
 function updateCartProducts(){
+    updateDeletedCart();
     updateCartTotal();
     cleanListedCartProducts();
     listingCartProducts();
@@ -185,14 +208,16 @@ function addProducto(event){
 
 
 //Funcion para encontrar posicion del producto en array
-function findPosition(code){
-    let i;
-    for(i=0; i < productos.length; i++){
-        if(productos[i].codigo == code){
+function findPosition(codeFunc){
+    let codeF = codeFunc;
+    let i=0;
+    while(i < productos.length){
+        if(parseInt(productos[i].codigo) == codeF){
             break;
         }
+        i++;
     }
-    return(parseInt(i-1));
+    return(i)
 }
 
 //Formulario para agregar productos al carrito
@@ -205,12 +230,13 @@ formularioAgregarCarro.onsubmit = (event) => addToCart(event);
 function addToCart(event){
     event.preventDefault();
     let codigoC = findPosition(inputOpcionAgregarCarro.value);
+    console.log(codigoC);
     let cantidadC = inputCantidadAgregarCarro.value;
     let newCartProducto = new CartProducto(codigoC, cantidadC);
     carritoProductos.push(newCartProducto);
     sessionStorage.setItem("carritoProductosSession", JSON.stringify(carritoProductos));
     let subtotal = parseFloat(cantidadC * (productos[codigoC].precio / productos[codigoC].peso));
-    cartTotal += subtotal.toFixed(2);
+    cartTotal += parseFloat(subtotal.toFixed(2));
 
     sessionStorage.setItem("carritoTotalSession", cartTotal);
     updateCartProducts();
@@ -255,8 +281,10 @@ formularioEliminar.onsubmit = (event) => deleteProduct(event);
 
 function deleteProduct(event){
     event.preventDefault();
-    codigoD = findPosition(inputOpcionEliminar.value+1);
+    codigoD = findPosition(inputOpcionEliminar.value);
+    console.log(codigoD);
     productos.splice(codigoD, 1);
+    console.log(productos);
 
     localStorage.setItem("productosLocal", JSON.stringify(productos));
     updateProducts();
