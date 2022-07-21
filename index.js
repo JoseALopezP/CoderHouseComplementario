@@ -115,27 +115,16 @@ function updateProducts(){
 }
 
 //Encontrar Posicion carrito
-function findPositionC(codeFunc){
-    let codeF = codeFunc;
+function findPositionC(codeF){
     let i=0;
     while(i < carritoProductos.length){
         if(parseInt(productos[i].codigo) == codeF){
-            return(i);
+            return(false);
         }
         i++;
     }
 }
-//Limpiar productos Carrito eliminados
-function updateDeletedCart(){
-    for(let i=0; i < carritoProductos.length ; i++){
-        code = findPositionC(carritoProductos[i].codigo);
-        if(code == false){
-            console.log(carritoProductos);
-            carritoProductos.splice(code, 1);
-            console.log(carritoProductos);
-        }
-    }
-}
+
 //Limpiar productos en Carrito
 function cleanListedCartProducts(){
     let productCartBlocks = document.querySelectorAll('.productCartBlock');
@@ -174,7 +163,6 @@ function listingCartProducts(){
 }
 //Actualizar carrito HTML
 function updateCartProducts(){
-    updateDeletedCart();
     updateCartTotal();
     cleanListedCartProducts();
     listingCartProducts();
@@ -229,13 +217,14 @@ formularioAgregarCarro.onsubmit = (event) => addToCart(event);
 
 function addToCart(event){
     event.preventDefault();
-    let codigoC = findPosition(inputOpcionAgregarCarro.value);
+    let codigoC = inputOpcionAgregarCarro.value;
+    let codigoP = findPosition(inputOpcionAgregarCarro.value);
     console.log(codigoC);
     let cantidadC = inputCantidadAgregarCarro.value;
     let newCartProducto = new CartProducto(codigoC, cantidadC);
     carritoProductos.push(newCartProducto);
     sessionStorage.setItem("carritoProductosSession", JSON.stringify(carritoProductos));
-    let subtotal = parseFloat(cantidadC * (productos[codigoC].precio / productos[codigoC].peso));
+    let subtotal = parseFloat(cantidadC * (productos[codigoP].precio / productos[codigoP].peso));
     cartTotal += parseFloat(subtotal.toFixed(2));
 
     sessionStorage.setItem("carritoTotalSession", cartTotal);
@@ -287,12 +276,23 @@ function deleteProduct(event){
     console.log(productos);
 
     localStorage.setItem("productosLocal", JSON.stringify(productos));
+    deletedCartProduct(inputOpcionEliminar.value);
     updateProducts();
     updateListingOptions();
     updateCartProducts();
     formularioCambiarPrecio.reset();
 }
 
+function deletedCartProduct(code){
+    let i = 0;
+    while(i < carritoProductos.length){
+        if(code == carritoProductos[i].codigo){
+            carritoProductos.splice(i,1);
+            i = -1;
+        }
+        i++;
+    }
+}
 
 //Eliminar Listado de opciones para funciones
 function deleteListedOptions(){
