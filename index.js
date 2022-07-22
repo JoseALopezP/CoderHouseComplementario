@@ -96,7 +96,7 @@ function listingProducts(){
                 <p>Precio (${peso}gr): $${precio}</p>
             </div>
         `;
-        marca == "La Paulina" && addIndividualItemListing("productBlock LaPaulina", htmlCode); //
+        marca == "La Paulina" && addIndividualItemListing("productBlock LaPaulina", htmlCode); //Condicionales Ternarios
         marca == "Paladini" && addIndividualItemListing("productBlock Paladini", htmlCode);
         (marca != "Paladini" && marca != "La Paulina") && addIndividualItemListing("productBlock", htmlCode);
     }
