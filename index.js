@@ -77,6 +77,12 @@ function cleanListedProducts(){
         product.remove();
     }
 }
+function addIndividualItemListing(classNameDiv, htmlCode){
+    let productBlock = document.createElement("div");
+    productBlock.className = `${classNameDiv}`;
+    productBlock.innerHTML = htmlCode;
+    productList.append(productBlock);
+}
 function listingProducts(){
     for(const product of productos){
         let {tipo, marca, peso, precio} = product; //Desestructuracion
@@ -89,24 +95,10 @@ function listingProducts(){
                 <h4>${tipo}</h4>
                 <p>Precio (${peso}gr): $${precio}</p>
             </div>
-        `
-        let productBlock = document.createElement("div");
-        if(marca == "La Paulina"){
-            productBlock.className = "productBlock LaPaulina";
-            productBlock.innerHTML = htmlCode;
-            productList.append(productBlock);
-        } else if(marca == "Paladini"){
-            productBlock.className = "productBlock Paladini";
-            productBlock.innerHTML = htmlCode;
-            productList.append(productBlock);
-        } else{
-            productBlock.className = "productBlock";
-            productBlock.innerHTML = htmlCode;
-            productList.append(productBlock);
-        }
-        
+        `;
+        marca == "La Paulina" && addIndividualItemListing("productBlock LaPaulina", htmlCode);
+        marca == "Paladini" && addIndividualItemListing("productBlock Paladini", htmlCode);
     }
-    
 }
 //Actualizar productos en HTML
 function updateProducts(){
