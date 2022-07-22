@@ -77,25 +77,25 @@ function cleanListedProducts(){
         product.remove();
     }
 }
-//Listando productos en HTML diferenciando estilos por marca
 function listingProducts(){
     for(const product of productos){
+        let {tipo, marca, peso, precio} = product; //Desestructuracion
         let htmlCode = `
             <div class="productBlockImg">
-                <img src="media/img/${product.tipo}.jpg" alt="${product.tipo}">
+                <img src="media/img/${tipo}.jpg" alt="${tipo}">
             </div>
             <div class="productBlockDescription">
-                <h3>${product.marca}</h3>
-                <h4>${product.tipo}</h4>
-                <p>Precio (${product.peso}gr): $${product.precio}</p>
+                <h3>${marca}</h3>
+                <h4>${tipo}</h4>
+                <p>Precio (${peso}gr): $${precio}</p>
             </div>
         `
         let productBlock = document.createElement("div");
-        if(product.marca == "La Paulina"){
+        if(marca == "La Paulina"){
             productBlock.className = "productBlock LaPaulina";
             productBlock.innerHTML = htmlCode;
             productList.append(productBlock);
-        } else if(product.marca == "Paladini"){
+        } else if(marca == "Paladini"){
             productBlock.className = "productBlock Paladini";
             productBlock.innerHTML = htmlCode;
             productList.append(productBlock);
@@ -140,12 +140,12 @@ function cleanListedCartProducts(){
 function listingCartProducts(){
     if(carritoProductos != null){
         for(const product of carritoProductos){
-            let code = findPosition(product.codigo);
+            let {marca, tipo, precio, peso} = productos[findPosition(product.codigo)]; //Desestructuracion
             htmlCode=`
-                <p class="cartItemDescription">${productos[code].marca} ${productos[code].tipo}</p>
-                <p class="cartItemPrice">$${productos[code].precio}(${productos[code].peso}gr)</p>
+                <p class="cartItemDescription">${marca} ${tipo}</p>
+                <p class="cartItemPrice">$${precio}(${peso}gr)</p>
                 <p class="cartItemQuantity">${product.cantidad}</p>
-                <p class="cartItemTotal">$${product.cantidad*(productos[code].precio)/productos[code].peso}</p>
+                <p class="cartItemTotal">$${(product.cantidad * (precio / peso)).toFixed(2)}</p>
             `
             let productBlock = document.createElement("div");
             productBlock.className = "productCartBlock";
@@ -250,15 +250,15 @@ function changePrice(event){
     updateCartProducts();
     formularioCambiarPrecio.reset();
 }
+
 function updateCartTotal(){
-    let newTotal = 0;
+    let arrTotal = [];
     for(const product of carritoProductos){
         let code = findPosition(product.codigo);
-        console.log(code);
-        console.log(typeof(code));
-        newTotal += (product.cantidad * (productos[code].precio / productos[code].peso));
+        let itemTotal = product.cantidad * (productos[code].precio / productos[code].peso);
+        arrTotal.push(parseFloat(itemTotal));
     }
-    cartTotal = newTotal;
+    cartTotal = (arrTotal.reduce((acc, n) => acc + n , 0)).toFixed(2);
     sessionStorage.setItem("carritoTotalSession", cartTotal);
 }
 
