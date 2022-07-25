@@ -223,6 +223,13 @@ function addToCart(event){
     sessionStorage.setItem("carritoTotalSession", cartTotal);
     updateCartProducts();
     formularioProductos.reset();
+    Swal.fire({
+        position: 'top-end',
+        icon: 'Agregado',
+        title: `Se agregaron ${cantidadC}gr de ${productos[codigoC].marca} ${productos[codigoC].tipo} al carrito`,
+        showConfirmButton: false,
+        timer: 1500
+      })
 }
 
 //formulario para cambiar precio
@@ -272,6 +279,62 @@ function updateCartTotal(){
     }
     cartTotal = (arrTotal.reduce((acc, n) => acc + n , 0)).toFixed(2);
     sessionStorage.setItem("carritoTotalSession", cartTotal);
+}
+
+//Limpiar productos del carrito
+let btnLimpiarCarrito = document.getElementById('BtnLimpiarC');
+btnLimpiarCarrito.onclick = () => limpiarCarrito();
+
+function limpiarCarrito(){
+    Swal.fire({
+        title: '¿Seguro que quiere limpiar el carrito?',
+        text: "¡No podrás volver atrás!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si ¡Límpialo!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            'Limpio!',
+            'Se limpió el carrito',
+            'Exitoso'
+        );
+        sessionStorage.clear();
+        carritoProductos.splice(0, carritoProductos.length);
+        updateCartProducts();
+        }
+      })
+}
+
+//Limpiar cambios en productos
+let btnValoresDefecto = document.getElementById('BtnDefaultValues');
+btnValoresDefecto.onclick = () => valoresDefecto();
+
+function valoresDefecto(){
+    Swal.fire({
+        title: '¿Seguro que quiere volver a los valores por defecto?',
+        text: "¡No podrás volver atrás!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si ¡Volver atrás!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            '¡Cargado!',
+            'Se cargaron los valores por defecto',
+            'Exitoso'
+        );
+        localStorage.clear();
+        productos.splice(0, productos.length);
+        window.location.reload(true);
+        }
+      })
 }
 
 //Formulario para eliminar productos listados
@@ -356,9 +419,9 @@ function updateListingOptions(){
 
 function main(){
     obtenerProductosLocalStorage();
-    obtenerCarritoSessionStorage()
+    obtenerCarritoSessionStorage();
     updateProducts();
-    updateCartProducts()
+    updateCartProducts();
     updateListingOptions();
 }
 
