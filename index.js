@@ -223,6 +223,13 @@ function addToCart(event){
     sessionStorage.setItem("carritoTotalSession", cartTotal);
     updateCartProducts();
     formularioProductos.reset();
+    Swal.fire({
+        position: 'top-end',
+        icon: 'Agregado',
+        title: `Se agregaron ${cantidadC}gr de ${productos[codigoC].marca} ${productos[codigoC].tipo} al carrito`,
+        showConfirmButton: false,
+        timer: 1500
+      })
 }
 
 //formulario para cambiar precio
@@ -234,14 +241,33 @@ formularioCambiarPrecio.onsubmit = (event) => changePrice(event);
 
 function changePrice(event){
     event.preventDefault();
-    let codigoC = findPosition(inputOpcionCambiarPrecio.value);
-    let precioC = inputCambiarPrecio.value;
-    productos[codigoC].precio = precioC;
+    Swal.fire({
+        title: '¿Estás seguro de que quieres cambiar el precio?',
+        text: "Actualizará también el precio de los productos agregados a carritos",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si ¡Cámbialo!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        let codigoC = findPosition(inputOpcionCambiarPrecio.value);
+        let precioC = inputCambiarPrecio.value;
+        if (result.isConfirmed) {
+        Swal.fire(
+            'Cambiado!',
+            `El precio ha sido cambiado de ${productos[codigoC].precio} a ${precioC}`,
+            'Exitoso'
+        );
+        productos[codigoC].precio = precioC;
 
-    localStorage.setItem("productosLocal", JSON.stringify(productos));
-    updateProducts();
-    updateCartProducts();
-    formularioCambiarPrecio.reset();
+        localStorage.setItem("productosLocal", JSON.stringify(productos));
+        updateProducts();
+        updateCartProducts();
+        formularioCambiarPrecio.reset();
+        }
+      })
+    
 }
 
 function updateCartTotal(){
@@ -255,6 +281,62 @@ function updateCartTotal(){
     sessionStorage.setItem("carritoTotalSession", cartTotal);
 }
 
+//Limpiar productos del carrito
+let btnLimpiarCarrito = document.getElementById('BtnLimpiarC');
+btnLimpiarCarrito.onclick = () => limpiarCarrito();
+
+function limpiarCarrito(){
+    Swal.fire({
+        title: '¿Seguro que quiere limpiar el carrito?',
+        text: "¡No podrás volver atrás!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si ¡Límpialo!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            'Limpio!',
+            'Se limpió el carrito',
+            'Exitoso'
+        );
+        sessionStorage.clear();
+        carritoProductos.splice(0, carritoProductos.length);
+        updateCartProducts();
+        }
+      })
+}
+
+//Limpiar cambios en productos
+let btnValoresDefecto = document.getElementById('BtnDefaultValues');
+btnValoresDefecto.onclick = () => valoresDefecto();
+
+function valoresDefecto(){
+    Swal.fire({
+        title: '¿Seguro que quiere volver a los valores por defecto?',
+        text: "¡No podrás volver atrás!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si ¡Volver atrás!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            '¡Cargado!',
+            'Se cargaron los valores por defecto',
+            'Exitoso'
+        );
+        localStorage.clear();
+        productos.splice(0, productos.length);
+        window.location.reload(true);
+        }
+      })
+}
+
 //Formulario para eliminar productos listados
 let formularioEliminar = document.getElementById('deleteForm');
 let inputOpcionEliminar = document.getElementById('deleteOptions');
@@ -263,17 +345,33 @@ formularioEliminar.onsubmit = (event) => deleteProduct(event);
 
 function deleteProduct(event){
     event.preventDefault();
-    codigoD = findPosition(inputOpcionEliminar.value);
-    console.log(codigoD);
-    productos.splice(codigoD, 1);
-    console.log(productos);
-
-    localStorage.setItem("productosLocal", JSON.stringify(productos));
-    deletedCartProduct(inputOpcionEliminar.value);
-    updateProducts();
-    updateListingOptions();
-    updateCartProducts();
-    formularioCambiarPrecio.reset();
+    Swal.fire({
+        title: '¿Estás seguro de que quieres eliminar el producto?',
+        text: "También se eliminará de los carritos donde haya sido agregado",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si ¡Elimínalo!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        codigoD = findPosition(inputOpcionEliminar.value);
+        if (result.isConfirmed) {
+          Swal.fire(
+            '¡Eliminado!',
+            `El producto ${productos[codigoD].marca} ${productos[codigoD].tipo} ya no está en la lista`,
+            'success'
+        )
+        productos.splice(codigoD, 1);
+        localStorage.setItem("productosLocal", JSON.stringify(productos));
+        deletedCartProduct(inputOpcionEliminar.value);
+        updateProducts();
+        updateListingOptions();
+        updateCartProducts();
+        formularioCambiarPrecio.reset();
+        }
+      })
+    
 }
 
 function deletedCartProduct(code){
@@ -321,9 +419,9 @@ function updateListingOptions(){
 
 function main(){
     obtenerProductosLocalStorage();
-    obtenerCarritoSessionStorage()
+    obtenerCarritoSessionStorage();
     updateProducts();
-    updateCartProducts()
+    updateCartProducts();
     updateListingOptions();
 }
 
