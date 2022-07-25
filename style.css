@@ -36,24 +36,48 @@ body {
     margin: 14px;
     font-size: 22px;
     left: 0px;
-    ali
 }
 .headerBlock img{
     height: 80px;
 }
 
-#productList{
-    background-color: aquamarine;
+.mainBlock{
     padding: 2px;
-    width: 98vw;
+    border-color: #ffbf01ff;
+    border-width: 8px;
+    border-style: double;
+    border-radius: 50px;
+    position: relative;
+    top: 110px;
+    width: 100%;
+    margin: .2%;
+    
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    grid-template-areas: "productList cartBlock" "addCartBlock cartBlock";
+}
+
+.productList{
+    grid-area: productList;
+    padding: 2px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 }
+
+.addCartBlock{
+    grid-area: addCartBlock;
+}
+
+.cartBlock{
+    grid-area: cartBlock;
+    width: 33%;
+}
+
 .productBlock{
     width: fit-content;
-    min-width: 22vw;
-    background-color: aliceblue;
+    width: calc(100%/3.2);
+    background-color: rgba(245, 245, 220, 0.5);
     padding: 4px;
     border: 4px;
     border-color: blue;
