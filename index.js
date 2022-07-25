@@ -234,14 +234,33 @@ formularioCambiarPrecio.onsubmit = (event) => changePrice(event);
 
 function changePrice(event){
     event.preventDefault();
-    let codigoC = findPosition(inputOpcionCambiarPrecio.value);
-    let precioC = inputCambiarPrecio.value;
-    productos[codigoC].precio = precioC;
+    Swal.fire({
+        title: '¿Estás seguro de que quieres cambiar el precio?',
+        text: "Actualizará también el precio de los productos agregados a carritos",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si ¡Cámbialo!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        let codigoC = findPosition(inputOpcionCambiarPrecio.value);
+        let precioC = inputCambiarPrecio.value;
+        if (result.isConfirmed) {
+        Swal.fire(
+            'Cambiado!',
+            `El precio ha sido cambiado de ${productos[codigoC].precio} a ${precioC}`,
+            'Exitoso'
+        );
+        productos[codigoC].precio = precioC;
 
-    localStorage.setItem("productosLocal", JSON.stringify(productos));
-    updateProducts();
-    updateCartProducts();
-    formularioCambiarPrecio.reset();
+        localStorage.setItem("productosLocal", JSON.stringify(productos));
+        updateProducts();
+        updateCartProducts();
+        formularioCambiarPrecio.reset();
+        }
+      })
+    
 }
 
 function updateCartTotal(){
@@ -263,17 +282,33 @@ formularioEliminar.onsubmit = (event) => deleteProduct(event);
 
 function deleteProduct(event){
     event.preventDefault();
-    codigoD = findPosition(inputOpcionEliminar.value);
-    console.log(codigoD);
-    productos.splice(codigoD, 1);
-    console.log(productos);
-
-    localStorage.setItem("productosLocal", JSON.stringify(productos));
-    deletedCartProduct(inputOpcionEliminar.value);
-    updateProducts();
-    updateListingOptions();
-    updateCartProducts();
-    formularioCambiarPrecio.reset();
+    Swal.fire({
+        title: '¿Estás seguro de que quieres eliminar el producto?',
+        text: "También se eliminará de los carritos donde haya sido agregado",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si ¡Elimínalo!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        codigoD = findPosition(inputOpcionEliminar.value);
+        if (result.isConfirmed) {
+          Swal.fire(
+            '¡Eliminado!',
+            `El producto ${productos[codigoD].marca} ${productos[codigoD].tipo} ya no está en la lista`,
+            'success'
+        )
+        productos.splice(codigoD, 1);
+        localStorage.setItem("productosLocal", JSON.stringify(productos));
+        deletedCartProduct(inputOpcionEliminar.value);
+        updateProducts();
+        updateListingOptions();
+        updateCartProducts();
+        formularioCambiarPrecio.reset();
+        }
+      })
+    
 }
 
 function deletedCartProduct(code){
