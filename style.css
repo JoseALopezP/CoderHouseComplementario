@@ -1,14 +1,50 @@
-@import url("https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 body {
+    font-family: 'Asap Condensed', sans-serif;
     animation: scrollBackground 70s linear infinite;
     width: 100%;
     background-image: url(media/img/Background/background.webp);
     background-repeat: repeat; }
 
+.headerBlock{
+    width: 100%;
+    margin: .2%;
+    height: 100px;
+    padding: 2px;
+    background-color: beige;
+    border-color: #ffbf01ff;
+    border-width: 8px;
+    border-style: double;
+    border-radius: 50px;
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: space-between;
+}
+.headerBlock h1{
+    position: relative;
+    margin: 10px;
+    left: 10px;
+    top: 0px;
+    font-weight: 900;
+    font-size: 56px;
+}
+.headerBlock p{
+    position: relative;
+    margin-left: 20px;
+    margin: 14px;
+    font-size: 22px;
+    left: 0px;
+    ali
+}
+.headerBlock img{
+    height: 80px;
+}
+
 #productList{
     background-color: aquamarine;
     padding: 2px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     width: 98vw;
     display: flex;
     flex-direction: row;
