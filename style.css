@@ -1,16 +1,83 @@
-#productList{
-    background-color: aquamarine;
+@import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+body {
+    font-family: 'Asap Condensed', sans-serif;
+    animation: scrollBackground 70s linear infinite;
+    width: 100%;
+    background-image: url(media/img/Background/background.webp);
+    background-repeat: repeat; }
+
+.headerBlock{
+    width: 100%;
+    margin: .2%;
+    height: 100px;
     padding: 2px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    width: 98vw;
+    background-color: beige;
+    border-color: #ffbf01ff;
+    border-width: 8px;
+    border-style: double;
+    border-radius: 50px;
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: space-between;
+}
+.headerBlock h1{
+    position: relative;
+    margin: 10px;
+    left: 10px;
+    top: 0px;
+    font-weight: 900;
+    font-size: 56px;
+}
+.headerBlock p{
+    position: relative;
+    margin-left: 20px;
+    margin: 14px;
+    font-size: 22px;
+    left: 0px;
+}
+.headerBlock img{
+    height: 80px;
+}
+
+.mainBlock{
+    padding: 2px;
+    border-color: #ffbf01ff;
+    border-width: 8px;
+    border-style: double;
+    border-radius: 50px;
+    position: relative;
+    top: 110px;
+    width: 100%;
+    margin: .2%;
+    
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    grid-template-areas: "productList cartBlock" "addCartBlock cartBlock";
+}
+
+.productList{
+    grid-area: productList;
+    padding: 2px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 }
+
+.addCartBlock{
+    grid-area: addCartBlock;
+}
+
+.cartBlock{
+    grid-area: cartBlock;
+    width: 33%;
+}
+
 .productBlock{
     width: fit-content;
-    min-width: 22vw;
-    background-color: aliceblue;
+    width: calc(100%/3.2);
+    background-color: rgba(245, 245, 220, 0.5);
     padding: 4px;
     border: 4px;
     border-color: blue;
@@ -32,3 +99,7 @@
 .productBlockImg img{
     max-width: 200px;
 }
+
+@keyframes scrollBackground {
+    100% {
+      background-position: 0px -3130px; } }
