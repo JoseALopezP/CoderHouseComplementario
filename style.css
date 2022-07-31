@@ -21,6 +21,7 @@ body {
     flex-direction: row;
     align-items: center;
     align-content: space-between;
+    z-index: 10;
 }
 .headerBlock h1{
     position: relative;
@@ -42,11 +43,10 @@ body {
 }
 
 .mainBlock{
-    padding: 2px;
     border-color: #ffbf01ff;
-    border-width: 8px;
-    border-style: double;
-    border-radius: 50px;
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 10px;
     position: relative;
     top: 110px;
     width: 100%;
@@ -76,28 +76,39 @@ body {
 
 .productBlock{
     width: fit-content;
-    width: calc(100%/3.2);
+    width: calc(98%/4);
     background-color: rgba(245, 245, 220, 0.5);
-    padding: 4px;
-    border: 4px;
-    border-color: blue;
-    border-radius: 4px;
-    margin: 10px;
+    border-color: #ffbf01ff;
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 10px;
+    margin: 2px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "productImg productDescription" "productImg productDescription";
 }
 
 .LaPaulina{
-    background-color: rgba(0, 255, 255, 0.301);
+    background-color: rgba(245, 245, 220, 0.9);
 }
 .Paladini{
-    background-color: rgba(255, 0, 0, 0.301);
+    background-color: rgba(245, 245, 220, 0.9);
 }
 
 .productBlockImg{
+    grid-area: productImg;
     max-width: 200px;
 }
 
 .productBlockImg img{
+    object-fit: contain;
     max-width: 200px;
+    border-radius: 10px;
+}
+
+.productBlockDescription{
+    padding: 10px;
+    grid-area: productDescription;
 }
 
 @keyframes scrollBackground {
