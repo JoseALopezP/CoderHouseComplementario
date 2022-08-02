@@ -20,43 +20,39 @@ let productos = [];
 let carritoProductos = [];
 let cartTotal = 0;
 
+//Pedido de productos a API
+const pedidoProductosAPI = async () =>{
+    let res = await fetch("https://62e85fc093938a545be52125.mockapi.io/productos");
+    let data = await res.json();
+    console.log(res);
+    console.log(data);
+    data.forEach((productAPI) => {
+        let newProducto = new Producto(productAPI.codigo, productAPI.marca, productAPI.tipo, productAPI.peso, productAPI.precio);
+        productos.push(newProducto);
+    });
+    localStorage.setItem("productosLocal", JSON.stringify(productos));
+    updateProducts();
+  }
+
 //Seteo inicial de productos (nada si ya hay productos, los basicos si aun no se ha agregado ninguno)
 function obtenerProductosLocalStorage() {
     let productosAlmacenados = localStorage.getItem("productosLocal");
     if (productosAlmacenados != null) {
         productos = JSON.parse(productosAlmacenados);
     } else{
-        let newProducto = new Producto(1, "La Paulina", "Queso Cremoso tradicional", 100, 86.3);
-        productos.push(newProducto);
-        newProducto = new Producto(2, "La Paulina", "Queso Reggianito", 100, 212.7);
-        productos.push(newProducto);
-        newProducto = new Producto(3, "La Paulina", "Queso Crema", 100, 78.1);
-        productos.push(newProducto);
-        newProducto = new Producto(4, "Paladini", "Mortadela", 100, 82.8);
-        productos.push(newProducto);
-        newProducto = new Producto(5, "Paladini", "Jamon Cocido", 100, 126.1);
-        productos.push(newProducto);
-        newProducto = new Producto(6, "Paladini", "Bondiola", 100, 213.2);
-        productos.push(newProducto);
-        newProducto = new Producto(7, "Paladini", "Salame Milan", 100, 156.7);
-        productos.push(newProducto);
-        newProducto = new Producto(8, "Paladini", "Queso Cremoso", 100, 97.5);
-        productos.push(newProducto);
-        newProducto = new Producto(9, "Paladini", "Queso Reggianito", 100, 191.9);
-        productos.push(newProducto);
-        newProducto = new Producto(10, "Paladini", "Queso Danbo", 100, 108.7);
-        productos.push(newProducto);
-        localStorage.setItem("productosLocal", JSON.stringify(productos));
+        pedidoProductosAPI();
     }
 }
 //Seteo carrito con session storage data
 function obtenerCarritoSessionStorage(){
     let carritoActual = sessionStorage.getItem('carritoProductosSession');
     let carritoTotalActual = sessionStorage.getItem('carritoTotalSession');
+    
     if(carritoActual != null){
         carritoProductos = JSON.parse(carritoActual);
         cartTotal = parseFloat(JSON.parse(carritoTotalActual));
     }
+    
 }
 
 //funcion constructora para array con opciones de desarrollador
@@ -423,6 +419,7 @@ function main(){
     updateProducts();
     updateCartProducts();
     updateListingOptions();
+    console.log(3);
 }
 
 main();
