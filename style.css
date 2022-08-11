@@ -7,8 +7,9 @@ body {
     background-repeat: repeat; }
 
 .headerBlock{
-    width: 100%;
-    margin: .2%;
+    width: calc(100% - 20px);
+    margin: 6px;
+    top: -5px;
     height: 100px;
     padding: 2px;
     background-color: beige;
@@ -45,12 +46,13 @@ body {
 .mainBlock{
     border-color: #ffbf01ff;
     border-width: 4px;
+    background-color: rgba(245, 245, 220, 0.3);
     border-style: solid;
     border-radius: 10px;
     position: relative;
-    top: 110px;
-    width: 100%;
-    margin: .2%;
+    top: 100px;
+    width: calc(100% - 20px);
+    margin: 5px;
     
     display: grid;
     grid-template-columns: 2.5fr 1fr;
@@ -76,7 +78,7 @@ body {
 
 .productBlock{
     width: fit-content;
-    width: calc(98%/4);
+    width: calc((100% - 64px)/4);
     background-color: rgba(245, 245, 220, 0.5);
     border-color: #ffbf01ff;
     border-width: 4px;
@@ -111,6 +113,164 @@ body {
     grid-area: productDescription;
 }
 
+.cartBlock{
+    width: 100%;
+}
+.cartHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: calc(100% - 12px);
+    background-color: #ffbf01ff;
+    border-color: rgba(245, 245, 220, 0.5);
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 10px;
+    margin: 2px;
+}
+.cartHeader H4{
+    width: calc(98%/4);
+    text-align: center;
+    margin-top: 10px;
+
+}
+
+.productCartBlock{
+    flex-direction: row;
+    justify-content: space-evenly;
+    display: flex;
+    
+    background-color: rgba(245, 245, 220, 0.5);
+    border-color: #ffbf01ff;
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 10px;
+    margin: 2px;
+}
+.productCartBlock p{
+    vertical-align: middle;
+    height: 100%;
+    vertical-align: middle;
+    width: calc(98%/4);
+    text-align: center;
+    font-size: large;
+    font-weight: 600;
+}
+
+.cartItemPrice {
+    margin-top: 20px;
+}
+.cartItemQuantity{
+    margin-top: 20px;
+}
+.cartItemTotal{
+    margin-top: 20px;
+}
+
+.productCartTotalBlock{
+    display: flex;
+    flex-direction: row;
+    width: calc(100% - 12px);
+    background-color: #ffbf01ff;
+    border-color: rgba(245, 245, 220, 0.5);
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 10px;
+    margin: 2px;
+}
+.productCartTotalBlock h4{
+    margin: 15px;
+    width: calc(98%*(1/4));
+    font-size: x-large;
+}
+.productCartTotalBlock p{
+    margin: 14px;
+    width: calc(98%*(3/4));
+    text-align: center;
+    font-weight: 700;
+    font-size: x-large;
+}
+
+.BtnLimpiar{
+    width: 99%;
+    background-color: rgb(255, 81, 1);
+    border-color: rgba(245, 245, 220, 0.5);
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 10px;
+    margin: 2px;
+    font-weight: 600;
+    color: white;
+}
+.addCartBlock{
+    width: 100%;
+}
+#addCartForm{
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(245, 245, 220, 0.9);
+    border-color: #ffbf01ff;
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 10px;
+    margin: 2px;
+    text-align: center;
+}
+.addCartFormBlock1{
+    width: calc((100% - 30px)*(2/5));
+    margin: 5px;
+}
+.addCartFormBlock1 p{
+    font-size: x-large;
+    margin: 2px;
+    width: 100%;
+}
+.addCartFormBlock1 select{
+    text-align: center;
+    font-family: 'Asap Condensed', sans-serif;
+    margin: 5px;
+}
+.addCartFormBlock2{
+    width: calc((100% - 30px)*(2/5));
+    margin: 5px;
+}
+.addCartFormBlock2 p{
+    font-size: x-large;
+    margin: 2px;
+    width: 100%;
+}
+.addCartFormBlock2 input{
+    text-align: center;
+    font-family: 'Asap Condensed', sans-serif;
+    margin: 5px;
+}
+.addCartFormBlock3{
+    display: flex;
+    width: calc((100% - 30px)*(1/5));
+    margin: 5px;
+    flex-direction: row-reverse;
+}
+.addCartFormBlock3 button{
+    height: 98%;
+    font-weight: 600;
+    background-color: coral;
+    border-color: #ffbf01ff;
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 10px;
+}
+
+footer{
+    border-color: #ffbf01ff;
+    border-width: 4px;
+    background-color: rgba(245, 245, 220, 0.3);
+    border-style: solid;
+    border-radius: 10px;
+    position: relative;
+    top: 100px;
+    width: calc(100% - 20px);
+    margin: 5px;
+}
 @keyframes scrollBackground {
     100% {
       background-position: 0px -3130px; } }

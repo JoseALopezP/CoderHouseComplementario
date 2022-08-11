@@ -221,8 +221,8 @@ function addToCart(event){
     formularioProductos.reset();
     Swal.fire({
         position: 'top-end',
-        icon: 'Agregado',
-        title: `Se agregaron ${cantidadC}gr de ${productos[codigoC].marca} ${productos[codigoC].tipo} al carrito`,
+        icon: 'success',
+        title: `Se agregaron ${cantidadC}gr de ${productos[codigoP].marca} ${productos[codigoP].tipo} al carrito`,
         showConfirmButton: false,
         timer: 1500
       })
@@ -253,7 +253,7 @@ function changePrice(event){
         Swal.fire(
             'Cambiado!',
             `El precio ha sido cambiado de ${productos[codigoC].precio} a ${precioC}`,
-            'Exitoso'
+            'success'
         );
         productos[codigoC].precio = precioC;
 
@@ -296,7 +296,7 @@ function limpiarCarrito(){
           Swal.fire(
             'Limpio!',
             'Se limpió el carrito',
-            'Exitoso'
+            'success'
         );
         sessionStorage.clear();
         carritoProductos.splice(0, carritoProductos.length);
@@ -324,7 +324,7 @@ function valoresDefecto(){
           Swal.fire(
             '¡Cargado!',
             'Se cargaron los valores por defecto',
-            'Exitoso'
+            'success'
         );
         localStorage.clear();
         productos.splice(0, productos.length);
